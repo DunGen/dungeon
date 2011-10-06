@@ -1,6 +1,6 @@
 ﻿#include "generator.h"
 /**
- * Asettaa tilen
+ * Asettaa tilen ja tilen 3d-mallin
  *
  * @param pos			coord structina tilen koordinaatit arrayssä ( ja kentällä )
  * @param deadend		onko tile umpikuja, eli lisätäänkö se deadend_settiin
@@ -20,8 +20,9 @@ void Generator::setTile(coord pos, bool deadend){
 	if(deadend == true)
 		this->deadend_set.insert(pos);
 }
+
 /**
- * Tyhjentää tilen
+ * Tyhjentää tilen ja poistaa 3d-meshin.
  *
  * @param x			tilen x koordinaatti arrayssä
  * @param y			tilen y koordinaatti arrayssä
@@ -36,6 +37,7 @@ void Generator::clearTile(int x, int y){
 	this->tile[x][y].x = 0;
 	this->tile[x][y].y = 0;
 }
+
 /**
  * Asettaa muodostettavan dungeonin mutkikkuuden ( atm ei tee mitään )
  *
@@ -46,24 +48,28 @@ void Generator::setComplexity(bool add){
 	this->complexity = (this->complexity > 50)?50:this->complexity;
 	this->complexity = (this->complexity < 5)?5:this->complexity;
 }
+
 /**
- * Tarkistaa ettei liikuta tile arrayn ulkopuolella
+ * Tarkistaa, ettei liikuta tile-arrayn ulkopuolella
  *
  * @param pos		tarkastettava koordinaatti coordina
+ * @return			false jos koordinaatit ovat arrayn ulkopuolella, muulloin true.
  */
 bool Generator::checkBoundaries(coord pos){
 	return (pos.x < 0 || pos.x > 99 || pos.y < 0 || pos.y > 99)?false:true;
 }
+
 /**
  * Tarkastaa onko näissä koordinaateissa palanen dungeonia vai tyhjyyttä
  *
  * @param x			tile arrayn x koordinaatti
  * @param y			tile arrayn y koordinaatti
- * @return			true jos osa dungeonia
+ * @return			true jos osa dungeonia, false jos tyhjää.
  */
 bool Generator::getTileStatus(int x, int y){
 	return this->tile[x][y].set;
 }
+
 /**
  * Ottaa instancen kuutiomodelista
  *
@@ -74,12 +80,14 @@ bool Generator::getTileStatus(int x, int y){
 TMesh Generator::copyTile(){
 	return CopyEntity(this->box);
 }
+
 /**
- * Antaa feikki 8bit binäärinä annetun tilen ympärillä olevien tilejen statuksen
+ * Tarkastaa annetun tilen ympärillä olevien tilejen statuksen.
  *
  * @param x				..
  * @param y				..
- * @return				1 = tile on palanen dungeonia / 0 = tyhjää
+ * @return				feikki 8bit binäärinä tilejen status, 0 = palanen dungeonia / 1 = tyhjää
+ *						binääri tulkitaan vasemmalta oikealle järjestyksessä: ylä, yläoikea, oikea, alaoikea, ala, alavasen, vasen, ylävasen
  */
 unsigned long int Generator::get8Sweep(int x, int y){
 	unsigned long int result = 0;
@@ -94,9 +102,9 @@ unsigned long int Generator::get8Sweep(int x, int y){
 	result = (this->getTileStatus(x-1,y+1))?	result:result+1;
 	return result;
 }
+
 /**
  * Tekee dungeonin lähtökohdan, eli 5 tilen kokoisen raksin, jonka ulokkeet ovat umpikujia
- *
  */
 void Generator::initialize(){
 	coord pos[5];
@@ -113,9 +121,12 @@ void Generator::initialize(){
 	
 	this->setTile(pos[4]);
 }
+
 /**
- * Muodostaa debug_stringin sisällön. Sisältö päivitetään joka 50. ruudunpäivitys
+ * Muodostaa debug_stringin sisällön. 
  *
+ * Sisältö on tällä hetkellä lista umpikujista. Sisältö päivitetään joka 50. ruudunpäivitys.
+ * Piirtää myös ruudulle debug_stringin sisällön.
  */
 void Generator::debugDeadendSet(){
 	this->refresh++;
@@ -143,6 +154,7 @@ void Generator::debugDeadendSet(){
 		//run = run+18;
 	}
 }
+
 /**
  * Muodostaa annetuista integereistä coordin ja palauttaa sen
  *
@@ -156,8 +168,11 @@ Generator::coord Generator::Tcoord(int x, int y){
 	pos.y = y;
 	return pos;
 }
+
 /**
- * Ottaa randomilla yhden deadend_setin umpikujista ja selvittää minkä tyyppinen umpikuja on kyseessä.
+ * Generoi yhden tilen/risteyksen/mutkan verran dungeonia.
+ *
+ * Ottaa randomilla yhden deadend_setin umpikujista ja selvittää get8Sweep() avulla minkä tyyppinen se on.
  * Tämän jälkeen annetaan kyseisen umpikujan koordinaatit ja umpikujatyyppi generateTile-funktiolle.
  */
 void Generator::generateDungeon(){
@@ -225,14 +240,15 @@ void Generator::generateDungeon(){
 			break;
 	}
 }
+
 /**
- * Generoi annettujen tietojen perusteella tietyn tyyppisen mutkan/suoran.
+ * Generoi annettujen tietojen perusteella tietyn tyyppisen mutkan/suoran. Magia tapahtuu täällä.
  *
  * @param x				..
  * @param y				..
  * @param suunta		Umpikujan tyyppi:
  *						1 = 1 tile ylös, 2 = 1 tile oikealle, 3 = 1 tile alas, 4 = 1 tile vasemmalle
-						5-8 = sama suuntajärjestys kuin 1-4 mutta vähintään 2:n tilen suora, eli voidaan generoida mutka / risteys jatkamaan sitä.
+ *						5-8 = sama suuntajärjestys kuin 1-4 mutta vähintään 2:n tilen suora, eli voidaan generoida mutka / risteys jatkamaan sitä.
  */
 void Generator::generateTile(int x, int y, int suunta){
 	coord pos = Tcoord(x,y);
@@ -281,6 +297,7 @@ void Generator::generateTile(int x, int y, int suunta){
 	if (this->deadend_set.size() > 25)
 		this->success = true;
 }
+
 /**
  * Apufunktio jolla tuntuvasti lyhennetään generateTile() pituutta. Annetun suunnan ja palikan perusteella palauttaa..
  * .. saatana tätä funktiota on vaikea selittää.
@@ -310,9 +327,9 @@ Generator::coord Generator::cOff(coord pos, int palikka, int suunta){
 
 	return Tcoord(pos.x+dir[suunta-5][palikka].x, pos.y+dir[suunta-5][palikka].y);
 }
+
 /**
  * Tyhjentää kerralla koko tile-arrayn, deadend_setin ja debug-arvot. Sen jälkeen alustaa uuden dungeonin alun initialize():lla
- *
  */
 void Generator::clearDungeon(){
 	this->deadend_set.clear();
