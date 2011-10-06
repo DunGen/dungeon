@@ -1,4 +1,8 @@
 ﻿#include "generator.h"
+#include <iostream>
+#include <string>
+#include <cstdlib>
+
 /**
  * Asettaa tilen
  *
@@ -14,8 +18,8 @@ void Generator::setTile(coord pos, bool deadend){
 	this->tile[pos.x][pos.y].x = pos.x;
 	this->tile[pos.x][pos.y].y = pos.y;
 	this->tile[pos.x][pos.y].set = true;
-	this->tile[pos.x][pos.y].mesh = this->copyTile();
-	PositionEntity(this->tile[pos.x][pos.y].mesh,Vec3(pos.x,0,pos.y));
+	/* this->tile[pos.x][pos.y].mesh = this->copyTile(); */
+	/* PositionEntity(this->tile[pos.x][pos.y].mesh,Vec3(pos.x,0,pos.y)); */
 
 	if(deadend == true)
 		this->deadend_set.insert(pos);
@@ -27,11 +31,11 @@ void Generator::setTile(coord pos, bool deadend){
  * @param y			tilen y koordinaatti arrayssä
  */
 void Generator::clearTile(int x, int y){
-	if(this->tile[x][y].mesh == NULL)
+	/* if(this->tile[x][y].mesh == NULL)
 		return;
 
-	FreeEntity(this->tile[x][y].mesh);
-	this->tile[x][y].mesh = NULL;
+	FreeEntity(this->tile[x][y].mesh); 
+	this->tile[x][y].mesh = NULL; */
 	this->tile[x][y].set = false;
 	this->tile[x][y].x = 0;
 	this->tile[x][y].y = 0;
@@ -71,9 +75,12 @@ bool Generator::getTileStatus(int x, int y){
  * @param deadend		onko tile umpikuja, eli lisätäänkö se deadend_settiin
  * @return				palauttaa TMesh meshinä instancen kuutiosta
  */
+ /*
 TMesh Generator::copyTile(){
 	return CopyEntity(this->box);
 }
+*/
+
 /**
  * Antaa feikki 8bit binäärinä annetun tilen ympärillä olevien tilejen statuksen
  *
@@ -120,10 +127,10 @@ void Generator::initialize(){
 void Generator::debugDeadendSet(){
 	this->refresh++;
 	if(this->refresh < 50){
-		DrawText(30,30, "%s", this->debug_string.c_str());
+		//DrawText(30,30, "%s", this->debug_string.c_str());
 		return;
 	}
-	DrawText(30,30, "%s", this->debug_string.c_str());
+	//DrawText(30,30, "%s", this->debug_string.c_str());
 	this->debug_string.erase();
 	this->refresh = 0;
 	std::string string;
@@ -135,7 +142,7 @@ void Generator::debugDeadendSet(){
 		int itx = it->x;
 		int ity = it->y;
 
-		sprintf(buffer,"%i,%i\n",itx,ity);
+		//sprintf(buffer,"%i,%i\n",itx,ity);
 		this->debug_string.append(buffer);
 
 		//DrawText (30,600+run,"%i,%i", itx, ity);
