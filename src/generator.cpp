@@ -157,7 +157,7 @@ void Generator::debugDeadendSet(){
  * @param y				..
  * @return				coord
  */
-Generator::coord Generator::Tcoord(int x, int y){
+coord Generator::Tcoord(int x, int y){
 	coord pos;
 	pos.x = x;
 	pos.y = y;
@@ -296,7 +296,7 @@ void Generator::generateTile(int x, int y, int suunta){
  * @param palikka		0-3 -> dir arrayn toinen ulottuvuus
  * @param suunta		(5-9)-5 -> dir arrayn ensimmäinen ulottuvuus
  */
-Generator::coord Generator::cOff(coord pos, int palikka, int suunta){
+coord Generator::cOff(coord pos, int palikka, int suunta){
 	coord dir[4][4];
 	dir[0][0].x = 0;	dir[1][0].x = 1;
 	dir[0][0].y = 1;	dir[1][0].y = 0;
