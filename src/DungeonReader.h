@@ -1,0 +1,5 @@
+class DungeonReader {
+	private:
+	
+	public:
+}
