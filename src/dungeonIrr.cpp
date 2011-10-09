@@ -26,12 +26,6 @@ IVideoDriver* driver;
 ISceneManager* smgr;
 
 
-//taulukko mahdollisista tileistä
-//IAnimatedMesh* tile[3];
-
-//taulukko nodeista jotka käyttää tilejä
-IAnimatedMeshSceneNode* node[255];
-
 /* Ohjelman aloituspiste */
 int main( int argc, char* argv[]) {
 	
@@ -49,12 +43,8 @@ int main( int argc, char* argv[]) {
 	//lisätään kamera	
 	smgr->addCameraSceneNode(0, vector3df(10,5,-5), vector3df(0,0,0));
 
-
+	//tilekartta
 	Tile map = Tile(smgr);
-
-	//tile[0] = smgr->getMesh("mdl/tile.obj");
-	//node[0] = smgr->addAnimatedMeshSceneNode(tile[0]);
-	//node[0]->setPosition(core::vector3df(2,0,0));
 
 
 	//lisätään valoa

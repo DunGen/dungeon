@@ -25,4 +25,7 @@ class Tile {
 		Tile(ISceneManager* psmgr);
 };
 
+//muista:
+//node[0]->setPosition(core::vector3df(2,0,0));
+
 #endif
