@@ -23,6 +23,8 @@ class Tile {
 	public:
 		Tile() {};
 		Tile(ISceneManager* psmgr);
+		void addTile(float, float, float);
+		void removeTile(float, float, float);
 };
 
 //muista:

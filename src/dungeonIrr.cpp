@@ -41,7 +41,7 @@ int main( int argc, char* argv[]) {
 	ISceneManager* smgr = device->getSceneManager();
 
 	//lisätään kamera	
-	smgr->addCameraSceneNode(0, vector3df(10,5,-5), vector3df(0,0,0));
+	smgr->addCameraSceneNode(0, vector3df(10,30,-5), vector3df(0,0,0));
 
 	//tilekartta
 	Tile map = Tile(smgr);
